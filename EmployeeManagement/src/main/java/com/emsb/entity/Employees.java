@@ -1,13 +1,29 @@
 package com.emsb.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="Employees")
 public class Employees {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	
 	private String name;
 	private int age;
 	private String gender;
 	private String designation;
 	private int rating;
+	
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private double salary;
 
 	public int getId() {
