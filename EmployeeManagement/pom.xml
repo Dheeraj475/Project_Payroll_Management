@@ -74,7 +74,7 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>-->
 
-		<!-- Actuator http://localhost:8080/actuator/ -->
+		<!-- Actuator http://localhost:8080/actuator/env -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
