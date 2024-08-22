@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.emsb.entity.Employees;
+import com.emsb.exception.EmployeesException;
 import com.emsb.repository.EmployeesRepository;
 
 @Service
@@ -16,26 +17,32 @@ public class EmployeesService {
 	private EmployeesRepository employeesrepo;
 	
 	/*Adding a employees*/
-	public Employees addEmployee(Employees employee) {
-		return employeesrepo.save(employee);
+	public Employees addEmployee(Employees employee) throws EmployeesException{
+		
+		try {
+			return employeesrepo.save(employee);
+			
+		} catch (Exception exception) {
+			throw new EmployeesException("Failed to add employee!");
+		}
 		
 	}
 	
 	
 	/*All employee*/
-	public List<Employees> getAllEmployee(List<Employees> employees){
-		return employeesrepo.findAll(employees);
+	public List<Employees> findAllEmployee(){
+		return employeesrepo.findAll();
 		
 	}
 	
 	/*Getting employee by id*/
-	public Employees getEmployeeById(int id) {
-		 return employeesrepo.findById(id).orElseThrow(() -> new RuntimeException(id + " : These id employee not found!"));
+	public Employees findEmployeeById(int id) throws EmployeesException {
+		 return employeesrepo.findById(id).orElseThrow(() -> new EmployeesException(id + " : These id employee not found!"));
 	}
 	
 	
 	/*Updating a employee*/
-	public Employees updateEmployee(int id, Employees employee) {
+	public Employees updateEmployee(int id, Employees employee) throws EmployeesException {
 		Optional<Employees> existingEmployee = employeesrepo.findById(id);
 		
 		if(existingEmployee.isPresent()) {
@@ -50,14 +57,16 @@ public class EmployeesService {
 			return employeesrepo.save(updateEmployee);
 			
 		}else {
-			throw new RuntimeException(id +" : This employee id not found");
+			throw new EmployeesException(id +" : This employee id not found");
 		}
 		
 	}
 	
-
-	/*Deleting a employee*/
 	
+	/*Deleting a employee*/
+	public void deleteEmployee(int id) {
+		employeesrepo.deleteById(id);
+	}
 	
 	
 
