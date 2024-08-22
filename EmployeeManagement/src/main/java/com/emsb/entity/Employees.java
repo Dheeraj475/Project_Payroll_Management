@@ -2,11 +2,15 @@ package com.emsb.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name="Employees")
@@ -16,11 +20,31 @@ public class Employees {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	
+	@Column(nullable = false)
+	@NotNull(message = "Name must be given!")
+	@Min(value = 4, message = "Name must be at least 4 characters!" )
 	private String name;
+	
+	@Column(nullable = false)
+	@NotNull(message = "Age must be given!")
+	@Min(value = 21, message = "Age must be at least 21!")
+	@Max(value = 60, message = "Age must be at most 60!")
 	private int age;
+	
+	@Column(nullable = false)
+	@NotNull(message = "Gender must be given!")
+	@Min(value=4, message = "Gender must be at least 4 characters!")
 	private String gender;
+	
+	@Column(nullable = false)
+	@NotNull(message = "Desigantion must be given!")
+	@Min(value=5, message = "Designation must be at least 5 characters!")
 	private String designation;
+	
+	@Column(nullable = false)
+	@NotNull(message = "Rating must be given!")
+	@Min(value =1, message = "Rating must be at least 1!")
+	@Max(value =5, message = "Rating must be at most 5!")
 	private int rating;
 	
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
