@@ -29,10 +29,10 @@ public class EmployeesController {
 	
 	
 	/*POST Adding employee*/
-	@PostMapping("/Employee")
+	@PostMapping("/employee")
 	public ResponseEntity<?> addEmployee(@RequestBody Employees employee){
 		try {
-			return new ResponseEntity<>(employeeService.addEmployee(employee), HttpStatus.CREATED);
+			return new ResponseEntity<>(employeeService.addingEmployee(employee), HttpStatus.CREATED);
 		} catch (EmployeesException exception) {
 			ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);			
