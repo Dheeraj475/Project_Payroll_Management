@@ -46,10 +46,6 @@ public class EmployeesService {
 	public Employees updateEmployee(int id, Employees employee) throws EmployeesException {
 		Optional<Employees> existingEmployee = employeesrepo.findById(id);
 
-		if (employee.getSalary() != 0.0) {
-			throw new EmployeesException(
-					"Salary is computed by payroll processing and should not be set manually or should be set to zero.");
-		}
 
 		if (existingEmployee.isPresent()) {
 			Employees updateEmployee = existingEmployee.get();

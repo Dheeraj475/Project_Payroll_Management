@@ -19,13 +19,16 @@ public class PayrollService {
 
 	@Autowired
 	private PayrollRepository payrollRepo;
+	
+	@Autowired
+	private TaxService taxService;
 
 	public Payroll processPayroll(int employeeId, String month, int year) {
 		Employees employee = employeeRepo.findById(employeeId)
-				.orElseThrow(() -> new EmployeesException("Invalid employee ID!"));
+				.orElseThrow(() -> new EmployeesException("Employee Id not found!"));
 
 		double grossSalary = employee.getSalary();
-		double tax = calculateTax(grossSalary);
+		double tax = taxService.calculateTax(grossSalary);
 		double netSalary = grossSalary - tax;
 
 		Payroll payroll = new Payroll();
@@ -114,18 +117,7 @@ public class PayrollService {
 
 		return salary;
 	}
-	
-	private double calculateTax(double salary) {
-	    if (salary <= 500000) {
-	        return 0;
-	    } else if (salary <= 700000) {
-	        return salary * 0.10;
-	    } else if (salary <= 1000000) {
-	        return salary * 0.20;
-	    } else {
-	        return salary * 0.30;
-	    }
-	}
+
 
 
 }
