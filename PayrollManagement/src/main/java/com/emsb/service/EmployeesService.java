@@ -15,21 +15,18 @@ public class EmployeesService {
 
 	@Autowired
 	private EmployeesRepository employeesrepo;
+	
+	@Autowired
+	private PayrollService payrollService;
 
+	
+	
 	/* Adding a employees */
 	public Employees addingEmployee(Employees employee) throws EmployeesException {
-
-		try {
-
-			if (employee.getSalary() != 0.0) {
-				throw new EmployeesException("Salary is computed by payroll processing and should not be set manually. Please leave the salary field as null or zero.");
-			}
-			
+			double salary = payrollService.calculateSalary(employee);
+			employee.setSalary(salary);
 			return employeesrepo.save(employee);
 
-		} catch (Exception exception) {
-			throw new EmployeesException("Failed to add employee!");
-		}
 
 	}
 

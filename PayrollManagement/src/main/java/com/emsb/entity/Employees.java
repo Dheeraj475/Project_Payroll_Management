@@ -28,8 +28,6 @@ public class Employees {
 	
 	@Column(nullable = false)
 	@NotNull(message = "Age must be given!")
-	@Min(value = 21, message = "Age must be at least 21!")
-	@Max(value = 60, message = "Age must be at most 60!")
 	private int age;
 	
 	@Column(nullable = false)
@@ -44,8 +42,6 @@ public class Employees {
 	
 	@Column(nullable = false)
 	@NotNull(message = "Rating must be given!")
-	@Min(value =1, message = "Rating must be at least 1!")
-	@Max(value =5, message = "Rating must be at most 5!")
 	private int rating;
 	
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
