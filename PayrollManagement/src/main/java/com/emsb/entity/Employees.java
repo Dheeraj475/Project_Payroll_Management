@@ -12,45 +12,45 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name="Employees")
+@Table(name = "Employees")
 public class Employees {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
+	private int employeeId;
+
 	@Column(nullable = false)
 	@NotNull(message = "Name must be given!")
-	@Size(min = 4, message = "Name must be at least 4 characters!" )
+	@Size(min = 4, message = "Name must be at least 4 characters!")
 	private String name;
-	
+
 	@Column(nullable = false)
 	@NotNull(message = "Age must be given!")
 	private int age;
-	
+
 	@Column(nullable = false)
 	@NotNull(message = "Gender must be given!")
-	@Size(min=4, message = "Gender must be at least 4 characters!")
+	@Size(min = 4, message = "Gender must be at least 4 characters!")
 	private String gender;
-	
+
 	@Column(nullable = false)
 	@NotNull(message = "Desigantion must be given!")
-	@Size(min=5, message = "Designation must be at least 5 characters!")
+	@Size(min = 5, message = "Designation must be at least 5 characters!")
 	private String designation;
-	
+
 	@Column(nullable = false)
 	@NotNull(message = "Rating must be given!")
 	private int rating;
-	
+
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private double salary;
 
-	public int getId() {
-		return id;
+	public int getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getName() {
@@ -101,9 +101,10 @@ public class Employees {
 		this.salary = salary;
 	}
 
-	public Employees(int id, String name, int age, String gender, String designation, int rating, double salary) {
+	public Employees(int employeeId, String name, int age, String gender, String designation, int rating,
+			double salary) {
 		super();
-		this.id = id;
+		this.employeeId = employeeId;
 		this.name = name;
 		this.age = age;
 		this.gender = gender;
@@ -119,8 +120,8 @@ public class Employees {
 
 	@Override
 	public String toString() {
-		return "Employees [id=" + id + ", name=" + name + ", age=" + age + ", gender=" + gender + ", designation="
-				+ designation + ", rating=" + rating + ", salary=" + salary + "]";
+		return "Employees [employeeId=" + employeeId + ", name=" + name + ", age=" + age + ", gender=" + gender
+				+ ", designation=" + designation + ", rating=" + rating + ", salary=" + salary + "]";
 	}
 
 }

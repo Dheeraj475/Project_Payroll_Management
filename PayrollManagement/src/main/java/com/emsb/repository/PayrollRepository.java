@@ -8,5 +8,7 @@ import com.emsb.entity.Payroll;
 
 @Repository
 public interface PayrollRepository extends JpaRepository<Payroll, Integer>{
+	
+   
 
 }

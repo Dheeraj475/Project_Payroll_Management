@@ -15,18 +15,16 @@ public class EmployeesService {
 
 	@Autowired
 	private EmployeesRepository employeesrepo;
-	
+
 	@Autowired
 	private PayrollService payrollService;
 
-	
-	
 	/* Adding a employees */
 	public Employees addingEmployee(Employees employee) throws EmployeesException {
-			double salary = payrollService.calculateSalary(employee);
-			employee.setSalary(salary);
-			return employeesrepo.save(employee);
-
+		double salary = payrollService.calculateSalary(employee);
+		salary = payrollService.formatToTwoDecimalPoints(salary);
+		employee.setSalary(salary);
+		return employeesrepo.save(employee);
 
 	}
 
@@ -37,15 +35,14 @@ public class EmployeesService {
 	}
 
 	/* Getting employee by id */
-	public Employees findEmployeeById(int id) throws EmployeesException {
-		return employeesrepo.findById(id)
-				.orElseThrow(() -> new EmployeesException(id + " : These id employee not found!"));
+	public Employees findEmployeeById(int employeeId) throws EmployeesException {
+		return employeesrepo.findById(employeeId)
+				.orElseThrow(() -> new EmployeesException(employeeId + " : These id employee not found!"));
 	}
 
 	/* Updating a employee */
-	public Employees updateEmployee(int id, Employees employee) throws EmployeesException {
-		Optional<Employees> existingEmployee = employeesrepo.findById(id);
-
+	public Employees updateEmployee(int employeeId, Employees employee) throws EmployeesException {
+		Optional<Employees> existingEmployee = employeesrepo.findById(employeeId);
 
 		if (existingEmployee.isPresent()) {
 			Employees updateEmployee = existingEmployee.get();
@@ -56,20 +53,24 @@ public class EmployeesService {
 			updateEmployee.setDesignation(employee.getDesignation());
 			updateEmployee.setRating(employee.getRating());
 
+			double salary = payrollService.calculateSalary(updateEmployee);
+			salary = payrollService.formatToTwoDecimalPoints(salary);
+			updateEmployee.setSalary(salary);
+
 			return employeesrepo.save(updateEmployee);
 
 		} else {
-			throw new EmployeesException(id + " : This employee id not found");
+			throw new EmployeesException(employeeId + " : This employee id not found");
 		}
 
 	}
 
 	/* Deleting a employee */
-	public void deleteEmployee(int id) throws EmployeesException {
-		if (!employeesrepo.existsById(id)) {
-			throw new EmployeesException(id + " : This employee ID not found!");
+	public void deleteEmployee(int employeeId) throws EmployeesException {
+		if (!employeesrepo.existsById(employeeId)) {
+			throw new EmployeesException(employeeId + " : This employee ID not found!");
 		}
-		employeesrepo.deleteById(id);
+		employeesrepo.deleteById(employeeId);
 	}
 
 }

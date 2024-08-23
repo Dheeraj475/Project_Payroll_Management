@@ -1,6 +1,8 @@
 package com.emsb.service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,11 @@ public class PayrollService {
 
 	@Autowired
 	private PayrollRepository payrollRepo;
-	
+
 	@Autowired
 	private TaxService taxService;
 
-	public Payroll processPayroll(int employeeId, String month, int year) {
+	public Payroll processingPayroll(int employeeId, String date, String month, int year) {
 		Employees employee = employeeRepo.findById(employeeId)
 				.orElseThrow(() -> new EmployeesException("Employee Id not found!"));
 
@@ -31,13 +33,18 @@ public class PayrollService {
 		double taxes = taxService.calculateTax(grossSalary);
 		double netSalary = grossSalary - taxes;
 
+		//Format two decimal points
+		grossSalary = formatToTwoDecimalPoints(grossSalary);
+		taxes = formatToTwoDecimalPoints(taxes);
+		netSalary = formatToTwoDecimalPoints(netSalary);
+
 		Payroll payroll = new Payroll();
 		payroll.setGrossSalary(grossSalary);
-		payroll.setTax(taxes);
+		payroll.setTaxAmount(taxes);
 		payroll.setNetSalary(netSalary);
-		payroll.setMonth(month);
-		payroll.setYear(year);
-		payroll.setPayDate(LocalDate.now());
+		payroll.setPayMonth(month);
+		payroll.setPayYear(year);
+		payroll.setPayDate(date);
 		payroll.setEmployeeId(employee);
 
 		return payrollRepo.save(payroll);
@@ -117,7 +124,16 @@ public class PayrollService {
 
 		return salary;
 	}
+	
+	
+	public List<Payroll> findAllParolls() {
+		return payrollRepo.findAll();
+	}
+	
 
-
+	public double formatToTwoDecimalPoints(double value) {
+		DecimalFormat df = new DecimalFormat("#.##");
+		return Double.parseDouble(df.format(value));
+	}
 
 }

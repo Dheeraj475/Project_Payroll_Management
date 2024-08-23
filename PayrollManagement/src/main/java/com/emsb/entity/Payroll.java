@@ -1,7 +1,5 @@
 package com.emsb.entity;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,30 +14,30 @@ public class Payroll {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private int payrollId;
 
 	private double grossSalary;
 
-	private double tax;
+	private double taxAmount;
 
 	private double netSalary;
 
-	private String month;
+	private String payMonth;
 
-	private int year;
+	private int payYear;
 
-	private LocalDate payDate;
+	private String payDate;
 
 	@ManyToOne
 	@JoinColumn(name = "employee_id")
 	private Employees employeeId;
 
-	public int getId() {
-		return id;
+	public int getPayrollId() {
+		return payrollId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPayrollId(int payrollId) {
+		this.payrollId = payrollId;
 	}
 
 	public double getGrossSalary() {
@@ -50,12 +48,12 @@ public class Payroll {
 		this.grossSalary = grossSalary;
 	}
 
-	public double getTax() {
-		return tax;
+	public double getTaxAmount() {
+		return taxAmount;
 	}
 
-	public void setTax(double tax) {
-		this.tax = tax;
+	public void setTaxAmount(double taxAmount) {
+		this.taxAmount = taxAmount;
 	}
 
 	public double getNetSalary() {
@@ -66,27 +64,27 @@ public class Payroll {
 		this.netSalary = netSalary;
 	}
 
-	public String getMonth() {
-		return month;
+	public String getPayMonth() {
+		return payMonth;
 	}
 
-	public void setMonth(String month) {
-		this.month = month;
+	public void setPayMonth(String payMonth) {
+		this.payMonth = payMonth;
 	}
 
-	public int getYear() {
-		return year;
+	public int getPayYear() {
+		return payYear;
 	}
 
-	public void setYear(int year) {
-		this.year = year;
+	public void setPayYear(int payYear) {
+		this.payYear = payYear;
 	}
 
-	public LocalDate getPayDate() {
+	public String getPayDate() {
 		return payDate;
 	}
 
-	public void setPayDate(LocalDate payDate) {
+	public void setPayDate(String payDate) {
 		this.payDate = payDate;
 	}
 
@@ -98,15 +96,15 @@ public class Payroll {
 		this.employeeId = employeeId;
 	}
 
-	public Payroll(int id, double grossSalary, double tax, double netSalary, String month, int year, LocalDate payDate,
-			Employees employeeId) {
+	public Payroll(int payrollId, double grossSalary, double taxAmount, double netSalary, String payMonth, int payYear,
+			String payDate, Employees employeeId) {
 		super();
-		this.id = id;
+		this.payrollId = payrollId;
 		this.grossSalary = grossSalary;
-		this.tax = tax;
+		this.taxAmount = taxAmount;
 		this.netSalary = netSalary;
-		this.month = month;
-		this.year = year;
+		this.payMonth = payMonth;
+		this.payYear = payYear;
 		this.payDate = payDate;
 		this.employeeId = employeeId;
 	}
@@ -118,8 +116,9 @@ public class Payroll {
 
 	@Override
 	public String toString() {
-		return "Payroll [id=" + id + ", grossSalary=" + grossSalary + ", tax=" + tax + ", netSalary=" + netSalary
-				+ ", month=" + month + ", year=" + year + ", payDate=" + payDate + ", employeeId=" + employeeId + "]";
+		return "Payroll [payrollId=" + payrollId + ", grossSalary=" + grossSalary + ", taxAmount=" + taxAmount
+				+ ", netSalary=" + netSalary + ", payMonth=" + payMonth + ", payYear=" + payYear + ", payDate="
+				+ payDate + ", employeeId=" + employeeId + "]";
 	}
 
 }
