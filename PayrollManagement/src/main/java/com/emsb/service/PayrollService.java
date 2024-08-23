@@ -28,12 +28,12 @@ public class PayrollService {
 				.orElseThrow(() -> new EmployeesException("Employee Id not found!"));
 
 		double grossSalary = employee.getSalary();
-		double tax = taxService.calculateTax(grossSalary);
-		double netSalary = grossSalary - tax;
+		double taxes = taxService.calculateTax(grossSalary);
+		double netSalary = grossSalary - taxes;
 
 		Payroll payroll = new Payroll();
 		payroll.setGrossSalary(grossSalary);
-		payroll.setTaxAmount(tax);
+		payroll.setTax(taxes);
 		payroll.setNetSalary(netSalary);
 		payroll.setMonth(month);
 		payroll.setYear(year);

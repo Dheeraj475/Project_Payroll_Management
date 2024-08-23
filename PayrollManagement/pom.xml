@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.emsb</groupId>
-	<artifactId>EmployeeManagement</artifactId>
+	<artifactId>PayrollManagement</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>EmployeeManagement</name>
+	<name>PayrollManagement</name>
 	<description>Demo project for Spring Boot</description>
 	<url />
 	<licenses>

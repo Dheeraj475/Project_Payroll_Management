@@ -1,26 +1,33 @@
 package com.emsb.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.emsb.repository.PayrollRepository;
+
 
 @Service
 public class TaxService {
 	
-	@Autowired
-	private PayrollRepository payrollRepo;
-	
 	public double calculateTax(double salary) {
-	    if (salary <= 500000) {
-	        return 0;
-	    } else if (salary <= 700000) {
-	        return salary * 0.10;
-	    } else if (salary <= 1000000) {
-	        return salary * 0.20;
-	    } else {
-	        return salary * 0.30;
-	    }
-	}
+        double tax = 0.0;
+
+        /*1. No tax for income up to 500,000*/
+        if (salary <= 500000) {
+            tax = 0;
+        } 
+        /*2. 10% tax for income between 500,001 and 700,000*/
+        else if (salary <= 700000) {
+            tax = (salary - 500000) * 0.10;
+        } 
+        /*3. 20% tax for income between 700,001 and 1,000,000*/
+        else if (salary <= 1000000) {
+            tax = (200000 * 0.10) + ((salary - 700000) * 0.20);
+        } 
+        /*4. 30% tax for income above 1,000,000*/
+        else {
+            tax = (200000 * 0.10) + (300000 * 0.20) + ((salary - 1000000) * 0.30);
+        }
+        
+        return tax;
+    }
 
 }

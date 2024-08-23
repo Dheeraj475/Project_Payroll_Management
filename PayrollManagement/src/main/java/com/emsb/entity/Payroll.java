@@ -20,7 +20,7 @@ public class Payroll {
 
 	private double grossSalary;
 
-	private double taxAmount;
+	private double tax;
 
 	private double netSalary;
 
@@ -50,12 +50,12 @@ public class Payroll {
 		this.grossSalary = grossSalary;
 	}
 
-	public double getTaxAmount() {
-		return taxAmount;
+	public double getTax() {
+		return tax;
 	}
 
-	public void setTaxAmount(double taxAmount) {
-		this.taxAmount = taxAmount;
+	public void setTax(double tax) {
+		this.tax = tax;
 	}
 
 	public double getNetSalary() {
@@ -98,12 +98,12 @@ public class Payroll {
 		this.employeeId = employeeId;
 	}
 
-	public Payroll(int id, double grossSalary, double taxAmount, double netSalary, String month, int year,
-			LocalDate payDate, Employees employeeId) {
+	public Payroll(int id, double grossSalary, double tax, double netSalary, String month, int year, LocalDate payDate,
+			Employees employeeId) {
 		super();
 		this.id = id;
 		this.grossSalary = grossSalary;
-		this.taxAmount = taxAmount;
+		this.tax = tax;
 		this.netSalary = netSalary;
 		this.month = month;
 		this.year = year;
@@ -118,9 +118,8 @@ public class Payroll {
 
 	@Override
 	public String toString() {
-		return "Payroll [id=" + id + ", grossSalary=" + grossSalary + ", taxAmount=" + taxAmount + ", netSalary="
-				+ netSalary + ", month=" + month + ", year=" + year + ", payDate=" + payDate + ", employeeId="
-				+ employeeId + "]";
+		return "Payroll [id=" + id + ", grossSalary=" + grossSalary + ", tax=" + tax + ", netSalary=" + netSalary
+				+ ", month=" + month + ", year=" + year + ", payDate=" + payDate + ", employeeId=" + employeeId + "]";
 	}
 
 }

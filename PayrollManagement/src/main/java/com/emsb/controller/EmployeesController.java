@@ -41,7 +41,7 @@ public class EmployeesController {
 	
 	
 	/* GET Getting all employee */
-	@GetMapping("/all-employee")
+	@GetMapping("/employee/all")
 	public ResponseEntity<List<Employees>> getAllEmployee(){
 		return new ResponseEntity<>(employeeService.findAllEmployee(), HttpStatus.OK);
 	}
@@ -59,7 +59,7 @@ public class EmployeesController {
 	
 	
 	/*PUT Updating a employee*/
-	@PutMapping("/update-employee/{id}")
+	@PutMapping("/update/employee:{id}")
 	public ResponseEntity<?> updateEmployee(@PathVariable int id ,@RequestBody Employees employee){	
 		try {	
 			return new ResponseEntity<>(employeeService.updateEmployee(id, employee), HttpStatus.OK);
@@ -72,7 +72,7 @@ public class EmployeesController {
 	
 	
 	/*DELETE Deleting employee*/
-	@DeleteMapping("/delete-employee/{id}")
+	@DeleteMapping("/delete/employee:{id}")
 	public ResponseEntity<?> deleteEmployee(@PathVariable int id){
 		
 		Employees employee = employeeService.findEmployeeById(id);
