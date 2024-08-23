@@ -1,7 +1,11 @@
 package com.emsb.service;
 
+
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +41,15 @@ public class PayrollService {
 		grossSalary = formatToTwoDecimalPoints(grossSalary);
 		taxes = formatToTwoDecimalPoints(taxes);
 		netSalary = formatToTwoDecimalPoints(netSalary);
+		
+		// Convert date string to Date object
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    Date payDate;
+	    try {
+	        payDate =  dateFormat.parse(date);
+	    } catch (ParseException e) {
+	        throw new EmployeesException("Invalid date format. Please use yyyy-MM-dd.");
+	    }
 
 		Payroll payroll = new Payroll();
 		payroll.setGrossSalary(grossSalary);
@@ -44,7 +57,7 @@ public class PayrollService {
 		payroll.setNetSalary(netSalary);
 		payroll.setPayMonth(month);
 		payroll.setPayYear(year);
-		payroll.setPayDate(date);
+		payroll.setPayDate(payDate);
 		payroll.setEmployeeId(employee);
 
 		return payrollRepo.save(payroll);
@@ -126,10 +139,20 @@ public class PayrollService {
 	}
 	
 	
-	public List<Payroll> findAllParolls() {
+	public List<Payroll> findAllPayrolls() {
 		return payrollRepo.findAll();
 	}
 	
+	
+	 public List<Payroll> findPayrollByEmployeeId(int employeeId) throws EmployeesException {
+	        List<Payroll> payrolls = payrollRepo.findByEmployeeId_EmployeeId(employeeId);
+	        if (payrolls == null || payrolls.isEmpty()) {
+	            throw new EmployeesException(employeeId + " : Payroll record not found!");
+	        }
+	        return payrolls;
+	    }
+
+
 
 	public double formatToTwoDecimalPoints(double value) {
 		DecimalFormat df = new DecimalFormat("#.##");

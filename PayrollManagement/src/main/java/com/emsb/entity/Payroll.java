@@ -1,5 +1,7 @@
 package com.emsb.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +28,7 @@ public class Payroll {
 
 	private int payYear;
 
-	private String payDate;
+	private Date payDate;
 
 	@ManyToOne
 	@JoinColumn(name = "employee_id")
@@ -80,11 +82,11 @@ public class Payroll {
 		this.payYear = payYear;
 	}
 
-	public String getPayDate() {
+	public Date getPayDate() {
 		return payDate;
 	}
 
-	public void setPayDate(String payDate) {
+	public void setPayDate(Date payDate) {
 		this.payDate = payDate;
 	}
 
@@ -97,7 +99,7 @@ public class Payroll {
 	}
 
 	public Payroll(int payrollId, double grossSalary, double taxAmount, double netSalary, String payMonth, int payYear,
-			String payDate, Employees employeeId) {
+			Date payDate, Employees employeeId) {
 		super();
 		this.payrollId = payrollId;
 		this.grossSalary = grossSalary;

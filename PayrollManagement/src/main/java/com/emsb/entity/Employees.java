@@ -1,7 +1,5 @@
 package com.emsb.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,7 +40,6 @@ public class Employees {
 	@NotNull(message = "Rating must be given!")
 	private int rating;
 
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private double salary;
 
 	public int getEmployeeId() {
