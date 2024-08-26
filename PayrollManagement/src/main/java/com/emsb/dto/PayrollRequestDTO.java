@@ -39,4 +39,23 @@ public class PayrollRequestDTO {
 		this.payDate = payDate;
 	}
 
+	public PayrollRequestDTO(int employeeId, String payMonth, int payYear, String payDate) {
+		super();
+		this.employeeId = employeeId;
+		this.payMonth = payMonth;
+		this.payYear = payYear;
+		this.payDate = payDate;
+	}
+
+	public PayrollRequestDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public String toString() {
+		return "PayrollRequestDTO [employeeId=" + employeeId + ", payMonth=" + payMonth + ", payYear=" + payYear
+				+ ", payDate=" + payDate + "]";
+	}
+
 }

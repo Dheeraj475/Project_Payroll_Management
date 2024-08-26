@@ -48,4 +48,24 @@ public class EmployeeDTO {
 		this.rating = rating;
 	}
 
+	public EmployeeDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public EmployeeDTO(String name, int age, String gender, String designation, int rating) {
+		super();
+		this.name = name;
+		this.age = age;
+		this.gender = gender;
+		this.designation = designation;
+		this.rating = rating;
+	}
+
+	@Override
+	public String toString() {
+		return "EmployeeDTO [name=" + name + ", age=" + age + ", gender=" + gender + ", designation=" + designation
+				+ ", rating=" + rating + "]";
+	}
+
 }
