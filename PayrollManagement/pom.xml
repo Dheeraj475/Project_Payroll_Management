@@ -28,10 +28,10 @@
     </scm>
     <properties>
         <java.version>17</java.version>
-        <!-- <spring-cloud.version>2023.0.1</spring-cloud.version> --> <!-- Same Spring Cloud version for eureka -->
+        <spring-cloud.version>2023.0.1</spring-cloud.version>  <!-- Same Spring Cloud version for eureka -->
     </properties>
 
-    <!-- <dependencyManagement>
+    <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -41,7 +41,7 @@
                 <scope>import</scope>
             </dependency>
         </dependencies>
-    </dependencyManagement> -->
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -68,10 +68,10 @@
         </dependency>
 
         <!-- Eureka Client http://localhost:8761/ -->
-        <!-- <dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency> -->
+        </dependency>
 
         <!-- Actuator http://localhost:8080/actuator/env -->
         <dependency>

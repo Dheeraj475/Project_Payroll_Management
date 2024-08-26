@@ -48,7 +48,7 @@ public class WebSecurityConfig {
                         // Allow access to Swagger UI
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Allow access to the token generation endpoint
-                        .requestMatchers("/getToken").permitAll()
+                        .requestMatchers("/api/getToken").permitAll()
                      // Allow access to Actuator and Eureka endpoints
                         .requestMatchers("/actuator/**", "/eureka/**").permitAll()
                         // All other requests need to be authenticated
