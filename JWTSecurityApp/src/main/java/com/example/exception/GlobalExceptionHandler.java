@@ -1,4 +1,6 @@
-package com.emsb.exception;
+package com.example.exception;
+
+
 
 import java.util.Date;
 import java.util.HashMap;
@@ -10,18 +12,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-
-
 @ControllerAdvice
-public class EmployeesGlobalExceptionHandler {
-	
-	public ResponseEntity<ErrorResponse> handleEmployeesException(EmployeesException exception){
-		ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-	}
-	
-	@ExceptionHandler(LoginException.class)
-    public ResponseEntity<?> handleLoggedInException(LoginException ex, WebRequest request) {
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(UserAlreadyLoggedInException.class)
+    public ResponseEntity<?> handleUserAlreadyLoggedInException(UserAlreadyLoggedInException ex, WebRequest request) {
         Map<String, String> body = new HashMap<>();
         body.put("timestamp", new Date().toString());
         body.put("message", ex.getMessage());
@@ -32,5 +27,3 @@ public class EmployeesGlobalExceptionHandler {
 
     // Other exception handlers can go here
 }
-
-

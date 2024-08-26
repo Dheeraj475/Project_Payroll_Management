@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.emsb.entity.Payroll;
+import com.emsb.model.FinancialReport;
 import com.emsb.repository.PayrollRepository;
 
 @Service

@@ -1,4 +1,4 @@
-package com.emsb.service;
+package com.emsb.model;
 
 public class FinancialReport {
     private double totalGrossSalary;

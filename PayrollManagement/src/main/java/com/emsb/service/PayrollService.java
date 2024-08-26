@@ -1,11 +1,9 @@
 package com.emsb.service;
 
-
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,19 +35,18 @@ public class PayrollService {
 		double taxes = taxService.calculateTax(grossSalary);
 		double netSalary = grossSalary - taxes;
 
-		//Format two decimal points
+		// Format two decimal points
 		grossSalary = formatToTwoDecimalPoints(grossSalary);
 		taxes = formatToTwoDecimalPoints(taxes);
 		netSalary = formatToTwoDecimalPoints(netSalary);
-		
-		// Convert date string to Date object
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	    Date payDate;
-	    try {
-	        payDate =  dateFormat.parse(date);
-	    } catch (ParseException e) {
-	        throw new EmployeesException("Invalid date format. Please use yyyy-MM-dd.");
-	    }
+
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate payDate;
+		try {
+			payDate = LocalDate.parse(date, dateFormatter);
+		} catch (DateTimeParseException e) {
+			throw new EmployeesException("Invalid date format. Please use yyyy-MM-dd.");
+		}
 
 		Payroll payroll = new Payroll();
 		payroll.setGrossSalary(grossSalary);
@@ -137,22 +134,18 @@ public class PayrollService {
 
 		return salary;
 	}
-	
-	
+
 	public List<Payroll> findAllPayrolls() {
 		return payrollRepo.findAll();
 	}
-	
-	
-	 public List<Payroll> findPayrollByEmployeeId(int employeeId) throws EmployeesException {
-	        List<Payroll> payrolls = payrollRepo.findByEmployeeId_EmployeeId(employeeId);
-	        if (payrolls == null || payrolls.isEmpty()) {
-	            throw new EmployeesException(employeeId + " : Payroll record not found!");
-	        }
-	        return payrolls;
-	    }
 
-
+	public List<Payroll> findPayrollByEmployeeId(int employeeId) throws EmployeesException {
+		List<Payroll> payrolls = payrollRepo.findByEmployeeId_EmployeeId(employeeId);
+		if (payrolls == null || payrolls.isEmpty()) {
+			throw new EmployeesException(employeeId + " : Payroll record not found!");
+		}
+		return payrolls;
+	}
 
 	public double formatToTwoDecimalPoints(double value) {
 		DecimalFormat df = new DecimalFormat("#.##");
