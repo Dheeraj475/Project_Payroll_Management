@@ -22,5 +22,9 @@ public interface PayrollRepository extends JpaRepository<Payroll, Integer> {
 
     @Query("SELECT p FROM Payroll p WHERE p.payMonth = :payMonth")
     List<Payroll> findByPayMonth(@Param("payMonth") String payMonth);
+    
+    @Query("SELECT p FROM Payroll p WHERE p.employeeId.employeeId = :employeeId AND p.payMonth = :payMonth AND p.payYear = :payYear")
+    List<Payroll> findByEmployeeIdAndPayMonthAndPayYear(@Param("employeeId") int employeeId, @Param("payMonth") String payMonth, @Param("payYear") int payYear);
+
 
 }

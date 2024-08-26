@@ -138,6 +138,30 @@ public class PayrollService {
 	public List<Payroll> findAllPayrolls() {
 		return payrollRepo.findAll();
 	}
+	
+	public String generatePayStub(int employeeId, String month, int year) {
+	    Employees employee = employeeRepo.findById(employeeId)
+	            .orElseThrow(() -> new EmployeesException("Employee Id not found!"));
+
+	    List<Payroll> payrolls = payrollRepo.findByEmployeeIdAndPayMonthAndPayYear(employeeId, month, year);
+	    if (payrolls.isEmpty()) {
+	        throw new EmployeesException("No payroll records found for the specified month and year!");
+	    }
+
+	    Payroll payroll = payrolls.get(0); // Assuming one record per month per employee
+
+	    // Create a formatted pay stub string
+	    StringBuilder payStub = new StringBuilder();
+	    payStub.append("Employee Name: ").append(employee.getName()).append("\n");
+	    payStub.append("Designation: ").append(employee.getDesignation()).append("\n");
+	    payStub.append("Pay Date: ").append(payroll.getPayDate()).append("\n");
+	    payStub.append("Month: ").append(month).append(", Year: ").append(year).append("\n");
+	    payStub.append("Gross Salary: ₹").append(payroll.getGrossSalary()).append("\n");
+	    payStub.append("Taxes: ₹").append(payroll.getTaxAmount()).append("\n");
+	    payStub.append("Net Salary: ₹").append(payroll.getNetSalary()).append("\n");
+
+	    return payStub.toString();
+	}
 
 	public List<Payroll> findPayrollByEmployeeId(int employeeId) throws EmployeesException {
 		List<Payroll> payrolls = payrollRepo.findByEmployeeId_EmployeeId(employeeId);

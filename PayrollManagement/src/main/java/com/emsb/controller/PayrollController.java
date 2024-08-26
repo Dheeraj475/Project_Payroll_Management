@@ -54,4 +54,18 @@ public class PayrollController {
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
     }
+    
+    @GetMapping("/paystub/{employeeId}/{month}/{year}")
+    public ResponseEntity<?> getPayStub(@PathVariable int employeeId, @PathVariable String month, @PathVariable int year) {
+        try {
+            String payStub = payrollService.generatePayStub(employeeId, month, year);
+            return new ResponseEntity<>(payStub, HttpStatus.OK);
+        } catch (EmployeesException exception) {
+            ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    
+    
 }

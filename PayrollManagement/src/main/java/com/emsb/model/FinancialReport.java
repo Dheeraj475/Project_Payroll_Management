@@ -11,8 +11,7 @@ public class FinancialReport {
         this.totalNetSalary = totalNetSalary;
     }
 
-    // Getters and Setters
-
+ 
     public double getTotalGrossSalary() {
         return totalGrossSalary;
     }

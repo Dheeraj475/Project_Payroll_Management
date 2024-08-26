@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(
-    info = @Info(title = "Employee Management System API", version = "1.0"),
+    info = @Info(title = "Payroll Management System API", version = "1.0"),
     security = @SecurityRequirement(name = "bearerAuth"),
     servers = @Server(url = "http://localhost:8080")
 )
