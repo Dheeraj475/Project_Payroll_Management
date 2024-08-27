@@ -31,8 +31,8 @@ public class AuthenticationController {
 	private JwtUserDetailsService userDetailsService;
 	
 	
-	//http://localhost:8080/api/getToken
-	@PostMapping("/getToken")
+	//http://localhost:8080/api/token
+	@PostMapping("/token")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());

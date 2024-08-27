@@ -36,6 +36,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 		String username = null;
 		String jwtToken = null;
+		
+		
 		// JWT Token is passed in the form "Bearer <token>". Thus, let's remove Bearer
 		//word and get the Token
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
@@ -50,6 +52,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		} else {
 			System.out.println("JWT Token does not begin with Bearer word");
 		}
+		
 
 		//Validate the token
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
