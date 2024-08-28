@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.emsb</groupId>
-	<artifactId>Gateway</artifactId>
+	<artifactId>BootCloudGateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Gateway</name>
+	<name>BootCloudGateway</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
