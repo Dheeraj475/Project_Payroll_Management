@@ -1,12 +1,14 @@
 package com.emsb.service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.emsb.entity.Payroll;
-import com.emsb.model.FinancialReport;
+import com.emsb.exception.EmployeesException;
+import com.emsb.model.PayrollSummaryResponse;
 import com.emsb.repository.PayrollRepository;
 
 @Service
@@ -14,37 +16,47 @@ public class FinancialReportService {
 
     @Autowired
     private PayrollRepository payrollRepo;
+    
+   
+	
 
-    // Generate monthly income statement
-    public FinancialReport generateMonthlyIncomeStatement(String month, int year) {
+    public PayrollSummaryResponse getIncomesByMonthAndYear(String month, int year) throws EmployeesException {
         List<Payroll> payrolls = payrollRepo.findByPayMonthAndPayYear(month, year);
-        return generateIncomeStatement(payrolls);
-    }
+        if (payrolls == null || payrolls.isEmpty()) {
+            throw new EmployeesException("Income record not found for the Month : " + month + " and Year : " + year);
+        }
 
-    // Generate yearly income statement
-    public FinancialReport generateYearlyIncomeStatement(int year) {
-        List<Payroll> payrolls = payrollRepo.findByPayYear(year);
-        return generateIncomeStatement(payrolls);
-    }
-
-    // Generate monthly tax summary
-    public double generateMonthlyTaxSummary(String month, int year) {
-        List<Payroll> payrolls = payrollRepo.findByPayMonthAndPayYear(month, year);
-        return payrolls.stream().mapToDouble(Payroll::getTaxAmount).sum();
-    }
-
-    // Generate yearly tax summary
-    public double generateYearlyTaxSummary(int year) {
-        List<Payroll> payrolls = payrollRepo.findByPayYear(year);
-        return payrolls.stream().mapToDouble(Payroll::getTaxAmount).sum();
-    }
-
-    // Helper method to generate income statement
-    private FinancialReport generateIncomeStatement(List<Payroll> payrolls) {
         double totalGrossSalary = payrolls.stream().mapToDouble(Payroll::getGrossSalary).sum();
-        double totalNetSalary = payrolls.stream().mapToDouble(Payroll::getNetSalary).sum();
         double totalTaxAmount = payrolls.stream().mapToDouble(Payroll::getTaxAmount).sum();
+        double totalNetSalary = payrolls.stream().mapToDouble(Payroll::getNetSalary).sum();
+        
+        totalGrossSalary = formatToTwoDecimalPoints(totalGrossSalary);
+        totalTaxAmount = formatToTwoDecimalPoints(totalTaxAmount);
+        totalNetSalary = formatToTwoDecimalPoints(totalNetSalary);
 
-        return new FinancialReport(totalGrossSalary, totalTaxAmount, totalNetSalary);
+        return new PayrollSummaryResponse(payrolls, totalGrossSalary, totalTaxAmount, totalNetSalary);
     }
+
+    public PayrollSummaryResponse getIncomesByYear(int year) throws EmployeesException {
+        List<Payroll> payrolls = payrollRepo.findByPayYear(year);
+        if (payrolls == null || payrolls.isEmpty()) {
+            throw new EmployeesException("Income record not found for the Year : " + year);
+        }
+
+        double totalGrossSalary = payrolls.stream().mapToDouble(Payroll::getGrossSalary).sum();
+        double totalTaxAmount = payrolls.stream().mapToDouble(Payroll::getTaxAmount).sum();
+        double totalNetSalary = payrolls.stream().mapToDouble(Payroll::getNetSalary).sum();
+
+        totalGrossSalary = formatToTwoDecimalPoints(totalGrossSalary);
+        totalTaxAmount = formatToTwoDecimalPoints(totalTaxAmount);
+        totalNetSalary = formatToTwoDecimalPoints(totalNetSalary);
+        
+        return new PayrollSummaryResponse(payrolls, totalGrossSalary, totalTaxAmount, totalNetSalary);
+    }
+    
+    public double formatToTwoDecimalPoints(double value) {
+		DecimalFormat df = new DecimalFormat("#.##");
+		return Double.parseDouble(df.format(value));
+	}
+    
 }

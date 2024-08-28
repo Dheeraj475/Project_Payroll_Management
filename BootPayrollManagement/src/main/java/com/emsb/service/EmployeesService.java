@@ -29,15 +29,15 @@ public class EmployeesService {
 	}
 
 	/* All employee */
-	public List<Employees> findAllEmployee() {
+	public List<Employees> getAllEmployee() {
 		return employeesrepo.findAll();
 
 	}
 
 	/* Getting employee by id */
-	public Employees findEmployeeById(int employeeId) throws EmployeesException {
+	public Employees getEmployeeById(int employeeId) throws EmployeesException {
 		return employeesrepo.findById(employeeId)
-				.orElseThrow(() -> new EmployeesException(employeeId + " : These id employee not found!"));
+				.orElseThrow(() -> new EmployeesException("Employee record not found for the EmployeeId : "+employeeId));
 	}
 
 	/* Updating a employee */
@@ -60,7 +60,7 @@ public class EmployeesService {
 			return employeesrepo.save(updateEmployee);
 
 		} else {
-			throw new EmployeesException(employeeId + " : This employee id not found");
+			throw new EmployeesException("Employee record not found for updating this EmployeeId : "+employeeId);
 		}
 
 	}
@@ -68,7 +68,7 @@ public class EmployeesService {
 	/* Deleting a employee */
 	public void deleteEmployee(int employeeId) throws EmployeesException {
 		if (!employeesrepo.existsById(employeeId)) {
-			throw new EmployeesException(employeeId + " : This employee ID not found!");
+			throw new EmployeesException("Employee record not found for deleting this EmployeeId : "+employeeId);
 		}
 		employeesrepo.deleteById(employeeId);
 	}

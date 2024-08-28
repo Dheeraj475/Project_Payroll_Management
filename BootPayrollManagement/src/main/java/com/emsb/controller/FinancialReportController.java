@@ -5,36 +5,37 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.emsb.exception.EmployeesException;
+import com.emsb.exception.ErrorResponse;
+import com.emsb.model.PayrollSummaryResponse;
 import com.emsb.service.FinancialReportService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/income")
 public class FinancialReportController {
 
-	@Autowired
-	private FinancialReportService financialReportService;
+    @Autowired
+    private FinancialReportService financialReportService;
 
-	@GetMapping("/income/monthly/{month}/{year}")
-	public ResponseEntity<?> getMonthlyIncomeStatement(@PathVariable String month, @PathVariable int year) {
+    @GetMapping("{month}/{year}")
+    public ResponseEntity<?> incomesByMonthAndYear(@PathVariable String month, @PathVariable int year) {
+        try {
+            PayrollSummaryResponse summary = financialReportService.getIncomesByMonthAndYear(month, year);
+            return new ResponseEntity<>(summary, HttpStatus.OK);
+        } catch (EmployeesException exception) {
+            ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+    }
 
-		return new ResponseEntity<>(financialReportService.generateMonthlyIncomeStatement(month, year), HttpStatus.OK);
-
-	}
-
-	@GetMapping("/income/yearly/{year}")
-	public ResponseEntity<?> getYearlyIncomeStatement(@PathVariable int year) {
-		return new ResponseEntity<>(financialReportService.generateYearlyIncomeStatement(year), HttpStatus.OK);
-	}
-
-	@GetMapping("/tax/monthly/{month}/{year}")
-	public ResponseEntity<?> getMonthlyTaxSummary(@PathVariable String month, @PathVariable int year) {
-		return new ResponseEntity<>(financialReportService.generateMonthlyTaxSummary(month, year), HttpStatus.OK);
-		
-	}
-
-	@GetMapping("/tax/yearly/{year}")
-	public ResponseEntity<?> getYearlyTaxSummary(@PathVariable int year) {
-		return new ResponseEntity<>(financialReportService.generateYearlyTaxSummary(year), HttpStatus.OK);
-		
-	}
+    @GetMapping("/{year}")
+    public ResponseEntity<?> incomessByYear(@PathVariable int year) {
+        try {
+            PayrollSummaryResponse summary = financialReportService.getIncomesByYear(year);
+            return new ResponseEntity<>(summary, HttpStatus.OK);
+        } catch (EmployeesException exception) {
+            ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.emsb.controller;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,13 @@ import com.emsb.exception.ErrorResponse;
 import com.emsb.service.PayrollService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/payroll")
 public class PayrollController {
 
 	@Autowired
 	private PayrollService payrollService;
 
-	@PostMapping("/add/payroll")
+	@PostMapping("/add")
 	public ResponseEntity<?> processPayroll(@RequestBody PayrollRequestDTO payrollRequest) {
 		
 		try {
@@ -38,33 +39,62 @@ public class PayrollController {
 	}
 	
 	
-	
-    @GetMapping("/all/payroll")
-    public ResponseEntity<List<Payroll>> getAllPayrolls() {
-        return new ResponseEntity<>(payrollService.findAllPayrolls(), HttpStatus.OK);
+    @GetMapping("/all")
+    public ResponseEntity<List<Payroll>> allPayrolls() {
+        return new ResponseEntity<>(payrollService.getAllPayrolls(), HttpStatus.OK);
     }
 
     /* GET Getting employee with respective id */
-    @GetMapping("/get/payroll:{employeeId}")
-    public ResponseEntity<?> getPayrollByEmployeeId(@PathVariable int employeeId) {
+    @GetMapping("/employeeId:{employeeId}")
+    public ResponseEntity<?> payrollByEmployeeId(@PathVariable int employeeId) {
         try {
-            return new ResponseEntity<>(payrollService.findPayrollByEmployeeId(employeeId), HttpStatus.OK);
+            return new ResponseEntity<>(payrollService.getPayrollByEmployeeId(employeeId), HttpStatus.OK);
         } catch (EmployeesException exception) {
             ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
     }
     
-    @GetMapping("/paystub/{employeeId}/{month}/{year}")
-    public ResponseEntity<?> getPayStub(@PathVariable int employeeId, @PathVariable String month, @PathVariable int year) {
+    @GetMapping("/employeeId:{employeeId}/{month}/{year}")
+    public ResponseEntity<?> payrollByEmployeeMonthAndYear(@PathVariable int employeeId, @PathVariable String month, @PathVariable int year) {
         try {
-            String payStub = payrollService.generatePayStub(employeeId, month, year);
-            return new ResponseEntity<>(payStub, HttpStatus.OK);
+            List<Payroll> payroll = payrollService.getEmployeePayrollByMonthAndYear(employeeId, month, year);
+            return new ResponseEntity<>(payroll, HttpStatus.OK);
         } catch (EmployeesException exception) {
             ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
     }
+    
+    @GetMapping("/employeeId:{employeeId}/{year}")
+    public ResponseEntity<?> payrollByEmployeeYear(@PathVariable int employeeId, @PathVariable int year) {
+        try {
+            List<Payroll> payroll = payrollService.getEmployeePayrollByYear(employeeId, year);
+            return new ResponseEntity<>(payroll, HttpStatus.OK);
+        } catch (EmployeesException exception) {
+            ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    
+    @GetMapping("/employee/payPeriod")
+    public ResponseEntity<?> payrollByEmployeeMonthYearRange(
+            @RequestParam int employeeId,
+            @RequestParam String startMonthYear,
+            @RequestParam String endMonthYear) {
+        try {
+            List<Payroll> payrolls = payrollService.getPayrollsByMonthYearRange(employeeId, startMonthYear, endMonthYear);
+            return new ResponseEntity<>(payrolls, HttpStatus.OK);
+        } catch (EmployeesException exception) {
+            ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (DateTimeParseException e) {
+            ErrorResponse errorResponse = new ErrorResponse("Invalid date format. Please use MM-YYYY.", HttpStatus.BAD_REQUEST.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     
     

@@ -26,37 +26,56 @@ public class PayrollService {
 
 	
 	public Payroll processingPayroll(int employeeId, String date, String month, int year) {
-		Employees employee = employeeRepo.findById(employeeId)
-				.orElseThrow(() -> new EmployeesException("Employee Id not found!"));
+	    Employees employee = employeeRepo.findById(employeeId)
+	            .orElseThrow(() -> new EmployeesException("Employee Id not found!"));
 
-		double grossSalary = employee.getSalary();
-		double taxes = calculateTax(grossSalary);
-		double netSalary = grossSalary - taxes;
+	    double grossSalary = employee.getSalary();
+	    double taxes = calculateTax(grossSalary);
+	    double netSalary = grossSalary - taxes;
 
-		// Format two decimal points
-		grossSalary = formatToTwoDecimalPoints(grossSalary);
-		taxes = formatToTwoDecimalPoints(taxes);
-		netSalary = formatToTwoDecimalPoints(netSalary);
+	    // Format two decimal points
+	    grossSalary = formatToTwoDecimalPoints(grossSalary);
+	    taxes = formatToTwoDecimalPoints(taxes);
+	    netSalary = formatToTwoDecimalPoints(netSalary);
 
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDate payDate;
-		try {
-			payDate = LocalDate.parse(date, dateFormatter);
-		} catch (DateTimeParseException e) {
-			throw new EmployeesException("Invalid date format. Please use yyyy-MM-dd.");
-		}
+	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    LocalDate payDate;
+	    try {
+	        payDate = LocalDate.parse(date, dateFormatter);
+	    } catch (DateTimeParseException e) {
+	        throw new EmployeesException("Invalid date format. Please use yyyy-MM-dd.");
+	    }
 
-		Payroll payroll = new Payroll();
-		payroll.setGrossSalary(grossSalary);
-		payroll.setTaxAmount(taxes);
-		payroll.setNetSalary(netSalary);
-		payroll.setPayMonth(month);
-		payroll.setPayYear(year);
-		payroll.setPayDate(payDate);
-		payroll.setEmployeeId(employee);
+	    // Validate if payDate matches the given month and year
+	    if (payDate.getMonthValue() != getMonthNumber(month)) {
+	        throw new EmployeesException("Pay date month does not match the given month.");
+	    }
+	    if (payDate.getYear() != year) {
+	        throw new EmployeesException("Pay date year does not match the given year.");
+	    }
 
-		return payrollRepo.save(payroll);
+	    Payroll payroll = new Payroll();
+	    payroll.setGrossSalary(grossSalary);
+	    payroll.setTaxAmount(taxes);
+	    payroll.setNetSalary(netSalary);
+	    payroll.setPayMonth(month);
+	    payroll.setPayYear(year);
+	    payroll.setPayDate(payDate);
+	    payroll.setEmployeeId(employee);
+
+	    return payrollRepo.save(payroll);
 	}
+
+	private int getMonthNumber(String month) {
+	    DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM");
+	    try {
+	        LocalDate date = LocalDate.parse("2021-" + month + "-01", DateTimeFormatter.ofPattern("yyyy-MMMM-dd"));
+	        return date.getMonthValue();
+	    } catch (DateTimeParseException e) {
+	        throw new EmployeesException("Invalid month format. Please use full month name (e.g., January).");
+	    }
+	}
+
 
 	public double calculateSalary(Employees employee) {
 		int age = employee.getAge();
@@ -162,45 +181,81 @@ public class PayrollService {
 		return monthTax;
 	}
 
-	public List<Payroll> findAllPayrolls() {
+	public List<Payroll> getAllPayrolls() {
 		return payrollRepo.findAll();
 	}
 	
-	public String generatePayStub(int employeeId, String month, int year) {
-	    Employees employee = employeeRepo.findById(employeeId)
-	            .orElseThrow(() -> new EmployeesException("Employee Id not found!"));
-
-	    List<Payroll> payrolls = payrollRepo.findByEmployeeIdAndPayMonthAndPayYear(employeeId, month, year);
-	    if (payrolls.isEmpty()) {
-	        throw new EmployeesException("No payroll records found for the specified month and year!");
-	    }
-
-	    Payroll payroll = payrolls.get(0); // Assuming one record per month per employee
-
-	    // Create a formatted pay stub string
-	    StringBuilder payStub = new StringBuilder();
-	    payStub.append("Employee Name: ").append(employee.getName()).append("\n");
-	    payStub.append("Designation: ").append(employee.getDesignation()).append("\n");
-	    payStub.append("Pay Date: ").append(payroll.getPayDate()).append("\n");
-	    payStub.append("Month: ").append(month).append(", Year: ").append(year).append("\n");
-	    payStub.append("Gross Salary: ₹").append(payroll.getGrossSalary()).append("\n");
-	    payStub.append("Taxes: ₹").append(payroll.getTaxAmount()).append("\n");
-	    payStub.append("Net Salary: ₹").append(payroll.getNetSalary()).append("\n");
-
-	    return payStub.toString();
-	}
-
-	public List<Payroll> findPayrollByEmployeeId(int employeeId) throws EmployeesException {
+	public List<Payroll> getPayrollByEmployeeId(int employeeId) throws EmployeesException {
 		List<Payroll> payrolls = payrollRepo.findByEmployeeId_EmployeeId(employeeId);
 		if (payrolls == null || payrolls.isEmpty()) {
-			throw new EmployeesException(employeeId + " : Payroll record not found!");
+			throw new EmployeesException("Employee payroll record not found for the EmployeeId : "+employeeId);
 		}
 		return payrolls;
 	}
+	
+	public List<Payroll> getEmployeePayrollByMonthAndYear(int employeeId, String month, int year) {
+        Employees employee = employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new EmployeesException("Employee Id not found!"));
+
+        List<Payroll> payrolls = payrollRepo.findByEmployeeIdAndPayMonthAndPayYear(employeeId, month, year);
+        if (payrolls.isEmpty()) {
+            throw new EmployeesException("Employee payroll record not found for the EmployeeId : "+employeeId+", Month : "+month + " and Year : "+year);
+        }
+
+        return payrolls;
+    }
+	
+	public List<Payroll> getEmployeePayrollByYear(int employeeId, int year) {
+        Employees employee = employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new EmployeesException("Employee Id not found!"));
+
+        List<Payroll> payrolls = payrollRepo.findByEmployeeIdAndPayYear(employeeId, year);
+        if (payrolls.isEmpty()) {
+            throw new EmployeesException("Employee payroll record not found for the EmployeeId : "+employeeId+" and Year : "+year);
+        }
+
+        return payrolls;
+    }
+
+	
 
 	public double formatToTwoDecimalPoints(double value) {
 		DecimalFormat df = new DecimalFormat("#.##");
 		return Double.parseDouble(df.format(value));
 	}
+	
+	
+	
+	  public List<Payroll> getPayrollsByMonthYearRange(int employeeId, String startMonthYear, String endMonthYear) {
+	        Employees employee = employeeRepo.findById(employeeId)
+	                .orElseThrow(() -> new EmployeesException("Employee Id not found!"));
+
+	        LocalDate startDate = parseMonthYearToLocalDate(startMonthYear, true);
+	        LocalDate endDate = parseMonthYearToLocalDate(endMonthYear, false);
+
+	        List<Payroll> payrolls = payrollRepo.findByEmployeeIdAndPayDateBetween(employeeId, startDate, endDate);
+	        if (payrolls.isEmpty()) {
+	            throw new EmployeesException("No payroll records found for EmployeeId: " + employeeId + " between " + startMonthYear + " and " + endMonthYear);
+	        }
+
+	        return payrolls;
+	    }
+
+	  private LocalDate parseMonthYearToLocalDate(String monthYear, boolean isStart) {
+		    try {
+		        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
+		        LocalDate date = LocalDate.parse("01-" + monthYear, DateTimeFormatter.ofPattern("dd-MM-yyyy")); // Prefix with a default day
+		        return isStart ? date.withDayOfMonth(1) : date.withDayOfMonth(date.lengthOfMonth());
+		    } catch (DateTimeParseException e) {
+		        throw new EmployeesException("Invalid date format. Please use MM-YYYY.");
+		    }
+		}
+
+
+	   
+	
+
+
+
 
 }

@@ -22,7 +22,7 @@ public class EmployeesController {
   
 
     /* POST Adding employee */
-    @PostMapping("/add/employee")
+    @PostMapping("/employee/add")
     public ResponseEntity<?> addEmployee(@RequestBody EmployeeDTO employeeDTO) {
         try {
             Employees employee = new Employees();
@@ -40,16 +40,16 @@ public class EmployeesController {
     }
 
     /* GET Getting all employees */
-    @GetMapping("/all/employee")
-    public ResponseEntity<List<Employees>> getAllEmployee() {
-        return new ResponseEntity<>(employeeService.findAllEmployee(), HttpStatus.OK);
+    @GetMapping("/employee/all")
+    public ResponseEntity<List<Employees>> allEmployee() {
+        return new ResponseEntity<>(employeeService.getAllEmployee(), HttpStatus.OK);
     }
 
     /* GET Getting employee with respective id */
-    @GetMapping("/get/employee:{employeeId}")
+    @GetMapping("/get/employeeId:{employeeId}")
     public ResponseEntity<?> getEmployeeById(@PathVariable int employeeId) {
         try {
-            return new ResponseEntity<>(employeeService.findEmployeeById(employeeId), HttpStatus.OK);
+            return new ResponseEntity<>(employeeService.getEmployeeById(employeeId), HttpStatus.OK);
         } catch (EmployeesException exception) {
             ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
@@ -57,7 +57,7 @@ public class EmployeesController {
     }
 
     /* PUT Updating an employee */
-    @PutMapping("/update/employee:{employeeId}")
+    @PutMapping("/update/employeeId:{employeeId}")
     public ResponseEntity<?> updateEmployee(@PathVariable int employeeId, @RequestBody EmployeeDTO employeeDTO) {
         try {
             Employees employee = new Employees();
@@ -75,10 +75,10 @@ public class EmployeesController {
     }
 
     /* DELETE Deleting an employee */
-    @DeleteMapping("/delete/employee:{employeeId}")
+    @DeleteMapping("/delete/employeeId:{employeeId}")
     public ResponseEntity<?> deleteEmployee(@PathVariable int employeeId) {
         try {
-            Employees employee = employeeService.findEmployeeById(employeeId);
+            Employees employee = employeeService.getEmployeeById(employeeId);
             employeeService.deleteEmployee(employeeId);
             return new ResponseEntity<>(employee, HttpStatus.OK);
         } catch (EmployeesException exception) {
