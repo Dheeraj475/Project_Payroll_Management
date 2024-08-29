@@ -1,6 +1,7 @@
 package com.emsb.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,7 +79,7 @@ public class EmployeesController {
     @DeleteMapping("/delete/employeeId:{employeeId}")
     public ResponseEntity<?> deleteEmployee(@PathVariable int employeeId) {
         try {
-            Employees employee = employeeService.getEmployeeById(employeeId);
+            Optional<Employees> employee = employeeService.findByEmployeeId(employeeId);
             employeeService.deleteEmployee(employeeId);
             return new ResponseEntity<>(employee, HttpStatus.OK);
         } catch (EmployeesException exception) {

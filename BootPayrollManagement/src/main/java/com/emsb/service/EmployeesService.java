@@ -14,35 +14,37 @@ import com.emsb.repository.EmployeesRepository;
 public class EmployeesService {
 
 	@Autowired
-	private EmployeesRepository employeesrepo;
-
+	private EmployeesRepository employeesRepo;
+	
 	@Autowired
-	private PayrollService payrollService;
+	private SpecialService specialService;
+	
 
 	/* Adding a employees */
 	public Employees addingEmployee(Employees employee) throws EmployeesException {
-		double salary = payrollService.calculateSalary(employee);
-		salary = payrollService.formatToTwoDecimalPoints(salary);
+		double salary = specialService.calculateSalary(employee);
+		salary = specialService.formatToTwoDecimalPoints(salary);
 		employee.setSalary(salary);
-		return employeesrepo.save(employee);
+		return employeesRepo.save(employee);
 
 	}
 
 	/* All employee */
 	public List<Employees> getAllEmployee() {
-		return employeesrepo.findAll();
+		return employeesRepo.findAll();
 
 	}
 
 	/* Getting employee by id */
 	public Employees getEmployeeById(int employeeId) throws EmployeesException {
-		return employeesrepo.findById(employeeId)
-				.orElseThrow(() -> new EmployeesException("Employee record not found for the EmployeeId : "+employeeId));
+		return specialService.findEmployeeById(employeeId);
+		
 	}
+	
 
 	/* Updating a employee */
 	public Employees updateEmployee(int employeeId, Employees employee) throws EmployeesException {
-		Optional<Employees> existingEmployee = employeesrepo.findById(employeeId);
+		Optional<Employees> existingEmployee = employeesRepo.findById(employeeId);
 
 		if (existingEmployee.isPresent()) {
 			Employees updateEmployee = existingEmployee.get();
@@ -53,24 +55,30 @@ public class EmployeesService {
 			updateEmployee.setDesignation(employee.getDesignation());
 			updateEmployee.setRating(employee.getRating());
 
-			double salary = payrollService.calculateSalary(updateEmployee);
-			salary = payrollService.formatToTwoDecimalPoints(salary);
+			double salary = specialService.calculateSalary(updateEmployee);
+			salary = specialService.formatToTwoDecimalPoints(salary);
 			updateEmployee.setSalary(salary);
 
-			return employeesrepo.save(updateEmployee);
+			return employeesRepo.save(updateEmployee);
 
 		} else {
-			throw new EmployeesException("Employee record not found for updating this EmployeeId : "+employeeId);
+			throw new EmployeesException("Employee id not found for updating this EmployeeId : "+employeeId);
 		}
 
 	}
 
 	/* Deleting a employee */
+	
+	public Optional<Employees> findByEmployeeId(int employeeId){
+		return employeesRepo.findById(employeeId);
+	}
+	
 	public void deleteEmployee(int employeeId) throws EmployeesException {
-		if (!employeesrepo.existsById(employeeId)) {
-			throw new EmployeesException("Employee record not found for deleting this EmployeeId : "+employeeId);
+		
+	if (!employeesRepo.existsById(employeeId)) {
+			throw new EmployeesException("Employee id not found for deleting this EmployeeId : "+employeeId);
 		}
-		employeesrepo.deleteById(employeeId);
+		employeesRepo.deleteById(employeeId);
 	}
 
 }

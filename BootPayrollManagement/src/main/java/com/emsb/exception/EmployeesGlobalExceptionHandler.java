@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 
 
 
@@ -21,7 +20,7 @@ public class EmployeesGlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(LoginException.class)
-    public ResponseEntity<?> handleLoggedInException(LoginException ex, WebRequest request) {
+    public ResponseEntity<?> handleLoggedInException(LoginException ex) {
         Map<String, String> body = new HashMap<>();
         body.put("timestamp", new Date().toString());
         body.put("message", ex.getMessage());
@@ -30,7 +29,7 @@ public class EmployeesGlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
-    // Other exception handlers can go here
+    
 }
 
 

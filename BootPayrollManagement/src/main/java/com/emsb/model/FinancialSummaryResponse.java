@@ -3,7 +3,7 @@ package com.emsb.model;
 import java.util.List;
 import com.emsb.entity.Payroll;
 
-public class PayrollSummaryResponse {
+public class FinancialSummaryResponse {
 
 	private List<Payroll> payrolls;
 
@@ -45,7 +45,7 @@ public class PayrollSummaryResponse {
 		this.totalNetSalary = totalNetSalary;
 	}
 
-	public PayrollSummaryResponse(List<Payroll> payrolls, double totalGrossSalary, double totalTaxAmount,
+	public FinancialSummaryResponse(List<Payroll> payrolls, double totalGrossSalary, double totalTaxAmount,
 			double totalNetSalary) {
 		super();
 		this.payrolls = payrolls;

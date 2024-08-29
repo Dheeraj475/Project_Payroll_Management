@@ -49,15 +49,11 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .cors().and()  // Enable CORS
+                .cors().and()
                 .authorizeHttpRequests(authorize -> authorize
-                        // Allow access to Swagger UI
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        // Allow access to the token generation endpoint
                         .requestMatchers("/api/token").permitAll()
-                        // Allow access to Actuator and Eureka endpoints
                         .requestMatchers("/actuator/**", "/eureka/**").permitAll()
-                        // All other requests need to be authenticated
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
@@ -67,7 +63,6 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
-        // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
@@ -76,7 +71,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8111")); // Add your Gateway's origin
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8111"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

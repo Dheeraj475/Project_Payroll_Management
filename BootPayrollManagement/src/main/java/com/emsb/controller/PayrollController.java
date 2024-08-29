@@ -23,11 +23,11 @@ public class PayrollController {
 	private PayrollService payrollService;
 
 	@PostMapping("/add")
-	public ResponseEntity<?> processPayroll(@RequestBody PayrollRequestDTO payrollRequest) {
+	public ResponseEntity<?> addPayroll(@RequestBody PayrollRequestDTO payrollRequest) {
 		
 		try {
 			
-			Payroll payroll = payrollService.processingPayroll(payrollRequest.getEmployeeId(),payrollRequest.getPayDate(),payrollRequest.getPayMonth(), payrollRequest.getPayYear());
+			Payroll payroll = payrollService.addingPayroll(payrollRequest.getEmployeeId(),payrollRequest.getPayDate(),payrollRequest.getPayMonth(), payrollRequest.getPayYear());
 			return new ResponseEntity<>(payroll, HttpStatus.CREATED);
 		
 		} catch (EmployeesException exception) {

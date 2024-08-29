@@ -1,6 +1,9 @@
 package com.emsb.service;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,55 +11,56 @@ import org.springframework.stereotype.Service;
 
 import com.emsb.entity.Payroll;
 import com.emsb.exception.EmployeesException;
-import com.emsb.model.PayrollSummaryResponse;
+import com.emsb.model.FinancialSummaryResponse;
 import com.emsb.repository.PayrollRepository;
 
 @Service
 public class FinancialReportService {
 
-    @Autowired
-    private PayrollRepository payrollRepo;
-    
-   
-	
+	@Autowired
+	private PayrollRepository payrollRepo;
 
-    public PayrollSummaryResponse getIncomesByMonthAndYear(String month, int year) throws EmployeesException {
-        List<Payroll> payrolls = payrollRepo.findByPayMonthAndPayYear(month, year);
-        if (payrolls == null || payrolls.isEmpty()) {
-            throw new EmployeesException("Income record not found for the Month : " + month + " and Year : " + year);
-        }
+	@Autowired
+	private SpecialService specialService;
 
-        double totalGrossSalary = payrolls.stream().mapToDouble(Payroll::getGrossSalary).sum();
-        double totalTaxAmount = payrolls.stream().mapToDouble(Payroll::getTaxAmount).sum();
-        double totalNetSalary = payrolls.stream().mapToDouble(Payroll::getNetSalary).sum();
-        
-        totalGrossSalary = formatToTwoDecimalPoints(totalGrossSalary);
-        totalTaxAmount = formatToTwoDecimalPoints(totalTaxAmount);
-        totalNetSalary = formatToTwoDecimalPoints(totalNetSalary);
+	public FinancialSummaryResponse getAllSummary() {
+		List<Payroll> payrolls = payrollRepo.findAll();
 
-        return new PayrollSummaryResponse(payrolls, totalGrossSalary, totalTaxAmount, totalNetSalary);
-    }
-
-    public PayrollSummaryResponse getIncomesByYear(int year) throws EmployeesException {
-        List<Payroll> payrolls = payrollRepo.findByPayYear(year);
-        if (payrolls == null || payrolls.isEmpty()) {
-            throw new EmployeesException("Income record not found for the Year : " + year);
-        }
-
-        double totalGrossSalary = payrolls.stream().mapToDouble(Payroll::getGrossSalary).sum();
-        double totalTaxAmount = payrolls.stream().mapToDouble(Payroll::getTaxAmount).sum();
-        double totalNetSalary = payrolls.stream().mapToDouble(Payroll::getNetSalary).sum();
-
-        totalGrossSalary = formatToTwoDecimalPoints(totalGrossSalary);
-        totalTaxAmount = formatToTwoDecimalPoints(totalTaxAmount);
-        totalNetSalary = formatToTwoDecimalPoints(totalNetSalary);
-        
-        return new PayrollSummaryResponse(payrolls, totalGrossSalary, totalTaxAmount, totalNetSalary);
-    }
-    
-    public double formatToTwoDecimalPoints(double value) {
-		DecimalFormat df = new DecimalFormat("#.##");
-		return Double.parseDouble(df.format(value));
+		return specialService.calculateTotals(payrolls);
 	}
-    
+
+	public FinancialSummaryResponse getSummaryByMonthAndYear(String month, int year) throws EmployeesException {
+		List<Payroll> payrolls = payrollRepo.findByPayMonthAndPayYear(month, year);
+		if (payrolls == null || payrolls.isEmpty()) {
+			throw new EmployeesException("Record not found for the Month : " + month + " and Year : " + year);
+		}
+
+		return specialService.calculateTotals(payrolls);
+	}
+
+	public FinancialSummaryResponse getSummaryByYear(int year) throws EmployeesException {
+		List<Payroll> payrolls = payrollRepo.findByPayYear(year);
+
+		if (payrolls == null || payrolls.isEmpty()) {
+			throw new EmployeesException("Record not found for the Year : " + year);
+		}
+
+		return specialService.calculateTotals(payrolls);
+	}
+
+	public FinancialSummaryResponse getSummaryByMonthYearRange(String startMonthYear, String endMonthYear) {
+
+		LocalDate startDate = specialService.parseMonthYearToLocalDate(startMonthYear, true);
+		LocalDate endDate = specialService.parseMonthYearToLocalDate(endMonthYear, false);
+
+		List<Payroll> payrolls = payrollRepo.findByPayDateBetween(startDate, endDate);
+
+		if (payrolls == null || payrolls.isEmpty()) {
+			throw new EmployeesException("Records found for the date between : " + startMonthYear + " and " + endMonthYear);
+		}
+
+		return specialService.calculateTotals(payrolls);
+
+	}
+
 }

@@ -1,30 +1,28 @@
 package com.emsb.exception;
 
 public class ErrorResponse {
+    private String message;
+    private int code;
 
-	private String msg;
-	private int code;
+    public ErrorResponse(String message, int code) {
+        this.message = message;
+        this.code = code;
+    }
 
-	public String getMsg() {
-		return msg;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	public int getCode() {
-		return code;
-	}
+    public int getCode() {
+        return code;
+    }
 
-	public void setCode(int code) {
-		this.code = code;
-	}
-
-	public ErrorResponse(String msg, int code) {
-		super();
-		this.msg = msg;
-		this.code = code;
-	}
-
+    public void setCode(int code) {
+        this.code = code;
+    }
 }
+
