@@ -148,7 +148,7 @@ public class EmployeesServiceTest {
 
         when(employeesRepo.existsById(empId)).thenReturn(true);
 
-        employeesService.deleteEmployee(empId);
+        employeesService.deleteEmployee(5);
 
         verify(employeesRepo).deleteById(empId);
     }

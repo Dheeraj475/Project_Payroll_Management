@@ -179,13 +179,28 @@ public class FinancialReportServiceTest {
 
     private FinancialSummaryResponse createMockFinancialSummary(List<Payroll> payrollList) {
         FinancialSummaryResponse response = new FinancialSummaryResponse();
-        double totalGross = payrollList.stream().mapToDouble(Payroll::getGrossSalary).sum();
-        double totalTax = payrollList.stream().mapToDouble(Payroll::getTaxAmount).sum();
-        double totalNet = payrollList.stream().mapToDouble(Payroll::getNetSalary).sum();
         
+        // Calculate total gross salary
+        double totalGross = payrollList.stream()
+                                       .mapToDouble(Payroll::getGrossSalary)
+                                       .sum();
+        
+        // Calculate total tax amount
+        double totalTax = payrollList.stream()
+                                     .mapToDouble(Payroll::getTaxAmount)
+                                     .sum();
+        
+        // Calculate total net salary
+        double totalNet = payrollList.stream()
+                                     .mapToDouble(Payroll::getNetSalary)
+                                     .sum();
+        
+        // Set calculated values in the response object
         response.setTotalGrossSalary(totalGross);
         response.setTotalTaxAmount(totalTax);
         response.setTotalNetSalary(totalNet);
+        
         return response;
     }
+
 }
