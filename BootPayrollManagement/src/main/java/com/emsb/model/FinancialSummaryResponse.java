@@ -54,4 +54,11 @@ public class FinancialSummaryResponse {
 		this.totalNetSalary = totalNetSalary;
 	}
 
+	public FinancialSummaryResponse() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+
 }
