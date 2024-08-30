@@ -134,7 +134,6 @@ public class FinancialReportServiceTest {
 
     @Test
     public void testGetSummaryByMonthYearRange_RecordNotFound() {
-        // Arrange
         String startMonthYear = "January 2023";
         String endMonthYear = "August 2023";
 
@@ -145,7 +144,6 @@ public class FinancialReportServiceTest {
         when(specialService.parseMonthYearToLocalDate(endMonthYear, false)).thenReturn(endDate);
         when(payrollRepo.findByPayDateBetween(startDate, endDate)).thenReturn(new ArrayList<>());
 
-        // Act & Assert
         EmployeesException exception = Assertions.assertThrows(EmployeesException.class, () ->
             financialReportService.getSummaryByMonthYearRange(startMonthYear, endMonthYear)
         );
