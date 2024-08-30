@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Employees")
@@ -19,7 +18,7 @@ public class Employees {
 
 	@Column(nullable = false)
 	@NotNull(message = "Name must be given!")
-	@Size(min = 4, message = "Name must be at least 4 characters!")
+	
 	private String name;
 
 	@Column(nullable = false)
@@ -28,12 +27,12 @@ public class Employees {
 
 	@Column(nullable = false)
 	@NotNull(message = "Gender must be given!")
-	@Size(min = 4, message = "Gender must be at least 4 characters!")
+	
 	private String gender;
 
 	@Column(nullable = false)
 	@NotNull(message = "Desigantion must be given!")
-	@Size(min = 5, message = "Designation must be at least 5 characters!")
+	
 	private String designation;
 
 	@Column(nullable = false)

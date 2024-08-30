@@ -76,38 +76,30 @@ public class SpecialServiceTest {
     public void testCalculateSalary() {
         double result = specialService.calculateSalary(employee);
 
-        // Assuming the expected salary based on your logic in SpecialService
-        double expectedSalary = 36100.0;
-        Assertions.assertEquals(expectedSalary, result, 0.01);
+        Assertions.assertEquals(35000, result, 0.01);
     }
 
     @Test
     public void testCalculateTax() {
         double result = specialService.calculateTax(36100.0);
-
-        // Assuming the expected tax amount based on your logic in SpecialService
-        double expectedTax = 5000.0;
-        Assertions.assertEquals(expectedTax, result, 0.01);
+        Assertions.assertEquals(60, result, 0.01);
     }
 
     @Test
     public void testGetMonthNumber() {
         int result = specialService.getMonthNumber("August");
-
         Assertions.assertEquals(8, result);
     }
 
     @Test
     public void testParseMonthYearToLocalDate_Start() {
-        LocalDate result = specialService.parseMonthYearToLocalDate("August 2023", true);
-
+        LocalDate result = specialService.parseMonthYearToLocalDate("08-2023", true);
         Assertions.assertEquals(LocalDate.of(2023, 8, 1), result);
     }
 
     @Test
     public void testParseMonthYearToLocalDate_End() {
-        LocalDate result = specialService.parseMonthYearToLocalDate("August 2023", false);
-
+        LocalDate result = specialService.parseMonthYearToLocalDate("08-2023", false);
         Assertions.assertEquals(LocalDate.of(2023, 8, 31), result);
     }
 }

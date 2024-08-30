@@ -33,25 +33,22 @@ public class FinancialReportServiceTest {
 
     @Test
     public void testGetAllSummary() {
-        // Arrange
+      
         List<Payroll> payrollList = new ArrayList<>();
         Payroll payroll = createMockPayroll(50000.0, 10000.0, 40000.0);
         payrollList.add(payroll);
         
         when(payrollRepo.findAll()).thenReturn(payrollList);
         when(specialService.calculateTotals(payrollList)).thenReturn(createMockFinancialSummary(payrollList));
-
-        // Act
+    
         FinancialSummaryResponse result = financialReportService.getAllSummary();
 
-        // Assert
         Assertions.assertNotNull(result);
         Assertions.assertEquals(50000.0, result.getTotalGrossSalary(), 0.01);
     }
 
     @Test
     public void testGetSummaryByMonthAndYear() {
-        // Arrange
         String month = "August";
         int year = 2023;
 
@@ -62,23 +59,19 @@ public class FinancialReportServiceTest {
         when(payrollRepo.findByPayMonthAndPayYear(month, year)).thenReturn(payrollList);
         when(specialService.calculateTotals(payrollList)).thenReturn(createMockFinancialSummary(payrollList));
 
-        // Act
         FinancialSummaryResponse result = financialReportService.getSummaryByMonthAndYear(month, year);
 
-        // Assert
         Assertions.assertNotNull(result);
         Assertions.assertEquals(60000.0, result.getTotalGrossSalary(), 0.01);
     }
 
     @Test
     public void testGetSummaryByMonthAndYear_RecordNotFound() {
-        // Arrange
         String month = "August";
         int year = 2023;
         
         when(payrollRepo.findByPayMonthAndPayYear(month, year)).thenReturn(new ArrayList<>());
 
-        // Act & Assert
         EmployeesException exception = Assertions.assertThrows(EmployeesException.class, () ->
             financialReportService.getSummaryByMonthAndYear(month, year)
         );
@@ -88,7 +81,6 @@ public class FinancialReportServiceTest {
 
     @Test
     public void testGetSummaryByYear() {
-        // Arrange
         int year = 2023;
 
         List<Payroll> payrollList = new ArrayList<>();
@@ -98,22 +90,18 @@ public class FinancialReportServiceTest {
         when(payrollRepo.findByPayYear(year)).thenReturn(payrollList);
         when(specialService.calculateTotals(payrollList)).thenReturn(createMockFinancialSummary(payrollList));
 
-        // Act
         FinancialSummaryResponse result = financialReportService.getSummaryByYear(year);
 
-        // Assert
         Assertions.assertNotNull(result);
         Assertions.assertEquals(70000.0, result.getTotalGrossSalary(), 0.01);
     }
 
     @Test
     public void testGetSummaryByYear_RecordNotFound() {
-        // Arrange
         int year = 2023;
 
         when(payrollRepo.findByPayYear(year)).thenReturn(new ArrayList<>());
 
-        // Act & Assert
         EmployeesException exception = Assertions.assertThrows(EmployeesException.class, () ->
             financialReportService.getSummaryByYear(year)
         );
@@ -123,7 +111,6 @@ public class FinancialReportServiceTest {
 
     @Test
     public void testGetSummaryByMonthYearRange() {
-        // Arrange
         String startMonthYear = "January 2023";
         String endMonthYear = "August 2023";
         
@@ -139,10 +126,8 @@ public class FinancialReportServiceTest {
         when(payrollRepo.findByPayDateBetween(startDate, endDate)).thenReturn(payrollList);
         when(specialService.calculateTotals(payrollList)).thenReturn(createMockFinancialSummary(payrollList));
 
-        // Act
         FinancialSummaryResponse result = financialReportService.getSummaryByMonthYearRange(startMonthYear, endMonthYear);
 
-        // Assert
         Assertions.assertNotNull(result);
         Assertions.assertEquals(80000.0, result.getTotalGrossSalary(), 0.01);
     }
@@ -168,7 +153,7 @@ public class FinancialReportServiceTest {
         Assertions.assertEquals("Records found for the date between : " + startMonthYear + " and " + endMonthYear, exception.getMessage());
     }
 
-    // Utility methods to create mock data
+    // Create mock data
     private Payroll createMockPayroll(double grossSalary, double taxAmount, double netSalary) {
         Payroll payroll = new Payroll();
         payroll.setGrossSalary(grossSalary);
@@ -180,25 +165,14 @@ public class FinancialReportServiceTest {
     private FinancialSummaryResponse createMockFinancialSummary(List<Payroll> payrollList) {
         FinancialSummaryResponse response = new FinancialSummaryResponse();
         
-        // Calculate total gross salary
-        double totalGross = payrollList.stream()
-                                       .mapToDouble(Payroll::getGrossSalary)
-                                       .sum();
+     
+        double totalGrossSalary = payrollList.stream().mapToDouble(payroll -> payroll.getGrossSalary()).sum();
+		double totalTaxAmount = payrollList.stream().mapToDouble(payroll -> payroll.getTaxAmount()).sum();
+		double totalNetSalary = payrollList.stream().mapToDouble(payroll -> payroll.getNetSalary()).sum();
         
-        // Calculate total tax amount
-        double totalTax = payrollList.stream()
-                                     .mapToDouble(Payroll::getTaxAmount)
-                                     .sum();
-        
-        // Calculate total net salary
-        double totalNet = payrollList.stream()
-                                     .mapToDouble(Payroll::getNetSalary)
-                                     .sum();
-        
-        // Set calculated values in the response object
-        response.setTotalGrossSalary(totalGross);
-        response.setTotalTaxAmount(totalTax);
-        response.setTotalNetSalary(totalNet);
+        response.setTotalGrossSalary(totalGrossSalary);
+        response.setTotalTaxAmount(totalTaxAmount);
+        response.setTotalNetSalary(totalNetSalary);
         
         return response;
     }

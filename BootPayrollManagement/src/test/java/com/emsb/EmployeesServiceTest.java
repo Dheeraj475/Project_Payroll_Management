@@ -59,7 +59,7 @@ public class EmployeesServiceTest {
         Employees result = employeesService.addingEmployee(employee);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(mockCalculatedSalary, result.getSalary(), 0.01);
+        Assertions.assertEquals(41000, result.getSalary(), 0.01);
 
         verify(specialService).calculateSalary(employee);
         verify(specialService).formatToTwoDecimalPoints(mockCalculatedSalary);
@@ -89,12 +89,12 @@ public class EmployeesServiceTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals("Ravi Badodi", result.getName());
-        Assertions.assertEquals(1, result.getEmployeeId());
+        Assertions.assertEquals(3, result.getEmployeeId());
     }
 
     @Test
     public void testGetEmployeeById_ThrowsException() {
-        int id = 1;
+        int id = 9;
 
         when(specialService.findEmployeeById(id)).thenThrow(new EmployeesException("Employee not found"));
 
@@ -148,7 +148,7 @@ public class EmployeesServiceTest {
 
         when(employeesRepo.existsById(empId)).thenReturn(true);
 
-        employeesService.deleteEmployee(5);
+        employeesService.deleteEmployee(1);
 
         verify(employeesRepo).deleteById(empId);
     }

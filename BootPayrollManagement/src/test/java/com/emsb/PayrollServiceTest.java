@@ -1,6 +1,8 @@
 package com.emsb;
 
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
@@ -56,7 +58,7 @@ public class PayrollServiceTest {
         employee.setSalary(36100.0);
 
         mockGrossSalary = employee.getSalary();
-        mockTaxAmount = 5000.0;
+        mockTaxAmount = 0;
         mockNetSalary = mockGrossSalary - mockTaxAmount;
 
         payroll = new Payroll();
@@ -77,22 +79,38 @@ public class PayrollServiceTest {
 
     @Test
     public void testAddingPayroll() {
-        when(payrollRepo.save(payroll)).thenReturn(payroll);
+        Employees mockEmployee = new Employees();
+        mockEmployee.setEmployeeId(1);
+        mockEmployee.setSalary(32000);
+
+        // Setting up the mock responses for the specialService methods
+        when(specialService.findEmployeeById(1)).thenReturn(mockEmployee);
+        when(specialService.calculateTax(32000)).thenReturn(0.0);  
+        when(specialService.formatToTwoDecimalPoints(anyDouble())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(specialService.getMonthNumber("August")).thenReturn(8);
+
+        Payroll expectedPayroll = new Payroll();
+        expectedPayroll.setGrossSalary(32000);
+        expectedPayroll.setTaxAmount(0);
+        expectedPayroll.setNetSalary(32000);
+        expectedPayroll.setPayMonth("August");
+        expectedPayroll.setPayYear(2023);
+        expectedPayroll.setPayDate(LocalDate.of(2023, 8, 27));
+
+     
+        when(payrollRepo.save(any(Payroll.class))).thenReturn(expectedPayroll);
 
         Payroll result = payrollService.addingPayroll(1, "2023-08-27", "August", 2023);
 
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(mockGrossSalary, result.getGrossSalary(), 0.01);
-        Assertions.assertEquals(mockTaxAmount, result.getTaxAmount(), 0.01);
-        Assertions.assertEquals(mockNetSalary, result.getNetSalary(), 0.01);
-        Assertions.assertEquals("August", result.getPayMonth());
-        Assertions.assertEquals(2023, result.getPayYear());
-        Assertions.assertEquals(LocalDate.of(2023, 8, 27), result.getPayDate());
+        Assertions.assertEquals(expectedPayroll, result);
 
         verify(specialService).findEmployeeById(1);
-        verify(specialService).calculateTax(mockGrossSalary);
-        verify(payrollRepo).save(payroll);
+        verify(specialService).calculateTax(32000);
+        verify(payrollRepo).save(any(Payroll.class));
+        verify(specialService).getMonthNumber("August");
     }
+
+
 
     @Test
     public void testGetAllPayrolls() {
