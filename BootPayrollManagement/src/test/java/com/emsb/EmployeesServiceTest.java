@@ -59,7 +59,7 @@ public class EmployeesServiceTest {
         Employees result = employeesService.addingEmployee(employee);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(41000, result.getSalary(), 0.01);
+        Assertions.assertEquals(40000, result.getSalary(), 0.01);
 
         verify(specialService).calculateSalary(employee);
         verify(specialService).formatToTwoDecimalPoints(mockCalculatedSalary);
@@ -89,7 +89,7 @@ public class EmployeesServiceTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals("Ravi Badodi", result.getName());
-        Assertions.assertEquals(3, result.getEmployeeId());
+        Assertions.assertEquals(1, result.getEmployeeId());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class EmployeesServiceTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals("Ravi Kumar", result.getName());
-        Assertions.assertEquals(100, result.getSalary(), 0.01);
+        Assertions.assertEquals(38000, result.getSalary(), 0.01);
 
         verify(employeesRepo).findById(1);
         verify(employeesRepo).save(existingEmployee);

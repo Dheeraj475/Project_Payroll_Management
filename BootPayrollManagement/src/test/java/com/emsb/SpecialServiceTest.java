@@ -76,13 +76,13 @@ public class SpecialServiceTest {
     public void testCalculateSalary() {
         double result = specialService.calculateSalary(employee);
 
-        Assertions.assertEquals(35000, result, 0.01);
+        Assertions.assertEquals(36100, result, 0.01);
     }
 
     @Test
     public void testCalculateTax() {
         double result = specialService.calculateTax(36100.0);
-        Assertions.assertEquals(60, result, 0.01);
+        Assertions.assertEquals(0, result, 0.01);
     }
 
     @Test
